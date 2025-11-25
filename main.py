@@ -1,8 +1,9 @@
-import sys
 import math
 import random
-import pygame
+import sys
 from typing import List, Tuple
+
+import pygame
 
 # -------------------------------
 # Configuration and Constants
@@ -49,6 +50,7 @@ SCREEN_HEIGHT = ROWS * TILE_SIZE
 # -------------------------------
 # Helper functions
 # -------------------------------
+
 
 def grid_to_pixel(cell: Tuple[int, int]) -> Tuple[int, int]:
     r, c = cell
@@ -247,8 +249,18 @@ class Ghost:
         # Add simple eyes
         eye_offset = self.radius // 3
         eye_radius = max(2, self.radius // 5)
-        pygame.draw.circle(surf, (255, 255, 255), (center[0] - eye_offset, center[1] - eye_offset), eye_radius)
-        pygame.draw.circle(surf, (255, 255, 255), (center[0] + eye_offset, center[1] - eye_offset), eye_radius)
+        pygame.draw.circle(
+            surf,
+            (255, 255, 255),
+            (center[0] - eye_offset, center[1] - eye_offset),
+            eye_radius,
+        )
+        pygame.draw.circle(
+            surf,
+            (255, 255, 255),
+            (center[0] + eye_offset, center[1] - eye_offset),
+            eye_radius,
+        )
 
     def reset_position(self):
         self.x, self.y = grid_to_pixel(self.start_cell)
@@ -258,6 +270,7 @@ class Ghost:
 # -------------------------------
 # Drawing helpers
 # -------------------------------
+
 
 def draw_maze(surf: pygame.Surface):
     for r in range(ROWS):
@@ -296,6 +309,7 @@ def remaining_pellets() -> int:
 # Game State Management
 # -------------------------------
 
+
 def reset_board(original_layout: List[List[int]]):
     for r in range(ROWS):
         for c in range(COLS):
@@ -305,6 +319,7 @@ def reset_board(original_layout: List[List[int]]):
 # -------------------------------
 # Main Game Loop
 # -------------------------------
+
 
 def main():
     pygame.init()
@@ -321,7 +336,10 @@ def main():
     ghost_starts = [(5, 10), (3, 14)]
 
     pacman = Pacman(pac_start)
-    ghosts = [Ghost(ghost_starts[0], GHOST_COLORS[0]), Ghost(ghost_starts[1], GHOST_COLORS[1])]
+    ghosts = [
+        Ghost(ghost_starts[0], GHOST_COLORS[0]),
+        Ghost(ghost_starts[1], GHOST_COLORS[1]),
+    ]
 
     running = True
     game_over = False
@@ -340,7 +358,10 @@ def main():
                         # Reset game
                         reset_board(original_layout)
                         pacman = Pacman(pac_start)
-                        ghosts = [Ghost(ghost_starts[0], GHOST_COLORS[0]), Ghost(ghost_starts[1], GHOST_COLORS[1])]
+                        ghosts = [
+                            Ghost(ghost_starts[0], GHOST_COLORS[0]),
+                            Ghost(ghost_starts[1], GHOST_COLORS[1]),
+                        ]
                         game_over = False
                         win = False
                 else:
@@ -381,10 +402,17 @@ def main():
                 g.update(dt, frightened)
 
             # Collisions
-            pac_rect = pygame.Rect(int(pacman.x - pacman.radius), int(pacman.y - pacman.radius), pacman.radius * 2, pacman.radius * 2)
+            pac_rect = pygame.Rect(
+                int(pacman.x - pacman.radius),
+                int(pacman.y - pacman.radius),
+                pacman.radius * 2,
+                pacman.radius * 2,
+            )
             new_ghosts = []
             for g in ghosts:
-                ghost_rect = pygame.Rect(int(g.x - g.radius), int(g.y - g.radius), g.radius * 2, g.radius * 2)
+                ghost_rect = pygame.Rect(
+                    int(g.x - g.radius), int(g.y - g.radius), g.radius * 2, g.radius * 2
+                )
                 if pac_rect.colliderect(ghost_rect):
                     if frightened:
                         pacman.score += GHOST_EAT_SCORE
